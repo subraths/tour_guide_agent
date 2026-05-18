@@ -1,77 +1,93 @@
-# ✈️ AI Tourist Guide & Travel Planning Agent
+# AI Tourist Guide and Travel Planning Agent
 
-A mini LangChain + Groq project that acts as your personal AI travel companion.
+A minimal LangChain + LangGraph + DeepAgents project that acts as a tourist guide and travel planner.  
+It uses OpenRouter (`openai/gpt-oss-120b:free`) and supports in-memory trip history.
 
-## What it does
+---
 
-Ask it anything travel-related and it uses a ReAct agent to select the right tool and respond intelligently:
+## ✨ Features
 
-| Tool | What it does |
-|------|-------------|
-| `get_top_attractions` | Lists must-see spots for a city |
-| `plan_itinerary` | Builds a day-by-day trip plan |
-| `estimate_budget` | Calculates cost for budget/mid-range/luxury travel |
-| `get_packing_list` | Season-aware packing suggestions |
-| `get_local_tips` | Insider advice & cultural etiquette |
+- Suggest must-see spots for a city
+- Build quick multi-day itineraries
+- Save and list trip history (session only)
+- CLI interface for quick interaction
 
-## Setup
+---
+
+## ✅ Requirements
+
+- Python 3.10+
+- [uv](https://github.com/astral-sh/uv)
+- OpenRouter API key
+
+---
+
+## 🚀 Setup
 
 ```bash
-# 1. Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Run the agent
-python travel_agent.py
+uv init ai-tourist-guide
+cd ai-tourist-guide
+uv add langchain langchain-openrouter langgraph deepagents python-dotenv
 ```
 
-Or set your API key as an environment variable to skip the prompt:
+Create `.env`:
+
+```
+OPENROUTER_API_KEY=your_openrouter_key_here
+```
+
+---
+
+## 📂 Project Structure
+
+```
+ai-tourist-guide/
+├─ app/
+│  └─ main.py
+├─ tools/
+│  └─ guide_tools.py
+├─ .env
+└─ README.md
+```
+
+---
+
+## ▶️ Run
+
 ```bash
-export GROQ_API_KEY="your_key_here"
-python travel_agent.py
+uv run python app/main.py
 ```
 
-Get a free Groq API key at: https://console.groq.com
-
-## LangChain Concepts Used
-
-- **`@tool` decorator** — wraps plain Python functions as LangChain tools
-- **`ChatGroq`** — LangChain-compatible Groq LLM wrapper
-- **`create_react_agent`** — builds a ReAct (Reason + Act) agent
-- **`AgentExecutor`** — runs the agent loop, handles tool calls & errors
-- **`hub.pull`** — loads a standard ReAct prompt from LangChain Hub
-
-## Example Queries
+Example prompts:
 
 ```
-What are the top attractions in Kyoto?
-Plan a 3-day trip to Paris for someone who loves food and history
-What's the budget for 5 days in Tokyo, mid-range style?
-What should I pack for Bangalore in monsoon season?
-Give me local tips for New York City
+Plan a 3-day foodie trip to Tokyo
+Save this trip: 3-day Tokyo foodie itinerary
+List my trips
 ```
 
-## Project Structure
+---
+
+## 🧠 Model
+
+Uses:
 
 ```
-travel_agent/
-├── travel_agent.py    # Agent, tools, and CLI
-├── requirements.txt   # Pinned dependencies
-└── README.md
+openrouter:openai/gpt-oss-120b:free
 ```
 
-## Extending It
+---
 
-To add a new tool, just decorate any function with `@tool` and add it to the `tools` list in `build_agent()`:
+## ✅ Notes
 
-```python
-@tool
-def get_visa_info(country: str) -> str:
-    """Returns visa requirements for a country."""
-    ...
-```
+- Trip history is stored **in-memory only** (reset on restart).
+- You can extend tools to include real data sources (maps, weather, events, etc.).
 
-The agent will automatically decide when to use it.
+---
+
+## 📌 Next Ideas
+
+- Persistent trip history (SQLite / JSON)
+- Live POI search (Places API)
+- Weather-aware itinerary planning
+- Budget-based optimization
